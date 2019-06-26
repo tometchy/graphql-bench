@@ -1,0 +1,26 @@
+  # name of the benchmark.
+- name: lekta_integrator
+
+  # response timeout
+  timeout: 10s
+
+  # the benchmarks are first run for this duration and the results are ignored
+  warmup_duration: 30
+
+  # the duration of each benchmark
+  duration: 150
+
+  # number of open connections to the server
+  open_connections: 20
+
+  # the servers to be benchmarked, their dir and urls
+  candidates:
+  - name: myserver
+    host_name: 10.10.10.248
+    url: http://10.10.10.248:8080/graphql
+    query: LektaIntegratorQuery
+    queries_file: queries.graphql
+
+  # Requests/sec
+  rps:
+  - 100

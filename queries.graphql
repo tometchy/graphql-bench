@@ -1,0 +1,16 @@
+query LektaIntegratorQuery {
+  city {
+    cityNazwa
+    cityId
+    millisForDapper
+    cityHasHouseNo
+    cityHasStreets
+    cityIsActive
+    cityIsUnique
+    cityPowId
+    cityPowNazwa
+    cityWojId
+    cityWojNazwa
+    millisForDapper
+  }
+}

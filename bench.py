@@ -7,11 +7,18 @@ import subprocess
 
 import argparse
 import multiprocessing
+from time import sleep
 
 import sys
 import os
+import socket
 
 from plot import run_dash_server
+
+# ToDo: Make this configurable if 0 then skip printing
+print("Sleeping 60 seconds to give time for services to load")
+sleep(60)
+print("Waiting time is over, starting benchmarking")
 
 cpuCount = multiprocessing.cpu_count()
 fileLoc = os.path.dirname(os.path.abspath(__file__))
@@ -88,7 +95,15 @@ def benchQuery(benchParams):
     for candidate in benchParams["candidates"]:
 
         candidateName = candidate["name"]
-        candidateUrl = candidate["url"]
+        notResolvedUrl = candidate["url"]
+        hostName = candidate["host_name"]
+        print ("Not resolved url: {0}".format(notResolvedUrl))
+        print ("Host name: {0}".format(hostName))
+        resolvedHostIp = socket.gethostbyname(hostName)
+        # Maybe there is method in socket or in other library to resolve name within url, google it before implementing our way
+        print ("Resolved host ip: {0}".format(resolvedHostIp))
+        candidateUrl = notResolvedUrl.replace(hostName, resolvedHostIp, 1)
+        print ("Resolved url: {0}".format(candidateUrl ))
         candidateQuery = candidate.get("query", query)
         candidateQueriesFile = candidate.get("queries_file", queriesFile)
         candidateLuaScript = candidate.get('lua_script')
@@ -131,5 +146,7 @@ if __name__ == "__main__":
         default=sys.stdin)
     parser.add_argument('--bench', nargs='?', type=str)
     args = parser.parse_args()
+    file = open("/graphql-bench/bench.yaml", "r") 
+    args.spec = file.read()
     results = bench(args)
     run_dash_server(results)

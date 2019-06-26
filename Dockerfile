@@ -22,7 +22,15 @@ COPY plot.py /graphql-bench/plot.py
 COPY bench-lib.lua /graphql-bench/bench-lib.lua
 COPY bench.lua /graphql-bench/bench.lua
 
+COPY bench.yaml /graphql-bench/ws/
+COPY bench.yaml /graphql-bench/
+COPY queries.graphql /graphql-bench/ws/
+COPY queries.graphql /graphql-bench/
+
+EXPOSE 8050
+
 RUN mkdir -p /graphql-bench/ws
 WORKDIR /graphql-bench/ws/
 
 ENTRYPOINT ["python3", "-u", "/graphql-bench/bench.py"]
+#ENTRYPOINT ["python3", "/graphql-bench/bench.py", "--spec", "/graphql-bench/bench.yaml"]
